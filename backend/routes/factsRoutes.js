@@ -1,11 +1,11 @@
+// routes/factsRoutes.js
 const express = require("express");
 const router = express.Router();
-const {
-  getFacts,
-  createFact,
-} = require("../controllers/factsController");
+const authMiddleware = require("../middleware/authMiddleware");
+const { permitRole } = require("../middleware/roleMiddleware");
+const { getFacts, createFact } = require("../controllers/factsController");
 
-router.get("/", getFacts);       // Get all facts
-router.post("/", createFact);    // Admin: Create a new fact
+router.get("/", authMiddleware, permitRole("user", "admin"), getFacts);
+router.post("/", authMiddleware, permitRole("admin"), createFact);
 
 module.exports = router;
